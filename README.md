@@ -129,11 +129,11 @@ print(f"Closing Costs: ${purchase.calculate_closing_costs()}")
 ```
 
 This code resulted in this output:
-Down Payment: $227500.0
-Loan Amount: $97500.0
-Monthly Mortgage Payment: $849.33
-Total Interest Paid: $55379.34
-Closing Costs: $6500.0
+- Down Payment: $227500.0
+- Loan Amount: $97500.0
+- Monthly Mortgage Payment: $849.33
+- Total Interest Paid: $55379.34
+- Closing Costs: $6500.0
 
 I repeated this approach with the creation of a 'HomeSale' class to model and calculate various financial aspects of selling a home, including down payment, closing costs, agent costs, transfer taxes, and both federal and state capital gains taxes, ultimately determining the final profit and total sale amount.
 
@@ -214,14 +214,40 @@ print(f"Total Sale: ${sale.calculate_total_sale(selling_price, agent_costs_perce
 ```
 
 And the resulting output:
-Home Price: $193000
-Down Payment: $193000.0
-Selling Price: $230000
-Closing Costs: $3860.0
-Agent Costs: $9650.0
-Profit before Tax: $21640.0
-Federal Taxes: $0.0
-State Taxes: $1244.3
-Transfer Tax: $230.0
-Profit after Tax: $20165.7
-**Total Sale**: $213165.7
+- Home Price: $193000
+- Down Payment: $193000.0
+- Selling Price: $230000
+- Closing Costs: $3860.0
+- Agent Costs: $9650.0
+- Profit before Tax: $21640.0
+- Federal Taxes: $0.0
+- State Taxes: $1244.3
+- Transfer Tax: $230.0
+- Profit after Tax: $20165.7
+- **Total Sale**: $213165.7
+
+## Market Data Collection
+
+### Zestimate Price on My Home
+
+To visualize the historical Zestimate values for my home, I created a line plot using Matplotlib. I plotted the Zestimate values against their corresponding dates from the myhome_history dataset. To enhance readability, I formatted the date labels to display up to 12 dates and used the %Y-%m format for year and month. Additionally, I rotated the date labels for better readability. The plot was titled "Zestimate Price on My Home Over the Last 10 Years," with labeled axes for date and Zestimate price in dollars, and included a grid for clarity.
+
+```python
+plt.figure(figsize=(10, 6))
+plt.plot(myhome_history['date'], myhome_history['value'])
+
+# Format the date labels
+plt.gca().xaxis.set_major_locator(plt.MaxNLocator(12))  # Show up to 12 dates
+plt.gca().xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter('%Y-%m'))
+
+# Rotate data labels for better readability
+plt.gcf().autofmt_xdate()
+
+plt.title('Zestimate Price on My Home Over the Last 10 Years')
+plt.xlabel('Date')
+plt.ylabel('Zestimate Price ($)')
+plt.grid(True)
+plt.show()
+```
+
+![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/0e3af730-4ee8-42e6-8479-9319655847b1)
