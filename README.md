@@ -36,27 +36,22 @@ Following the compilation of public records, I integrated the Zillow API to acce
 
 After integrating the Zillow API, I utilized it to access current listings of homes for sale in my city, Port Wentworth, GA. By specifying the location and status parameters in the API request, I retrieved a JSON response containing detailed information about available properties. This data included listing prices, property sizes, and other relevant details essential for my analysis. By normalizing the JSON response into a structured DataFrame using Pandas, I was able to easily explore and analyze the available listings, providing me with valuable insights into the current real estate market in my area.
 
+```python
 url = "https://zillow56.p.rapidapi.com/search"
 querystring = {"location": "port wentworth, ga", "status":"forSale", "output": "json"}
 headers = {
     "X-RapidAPI-Key": "",
     "X-RapidAPI-Host": "zillow56.p.rapidapi.com"
 }
-
 response = requests.get(url, headers=headers, params=querystring)
-
 data = response.json()
-
 if 'results' in data:
 	results = data['results']
 else:
 	results = []
-
-
 # Normalize the JSON response to flatten it
 df = pd.json_normalize(results)
 
 ### Homes Sold in My City
-
 
 ## Financial Data Collection
