@@ -8,6 +8,7 @@
 - Evaluate potential investment returns from my home sale and new purchase.
 
 ## Real Estate Data Collection
+### County Homes Sold (Chatham & Effingham)
 For this project, I accessed public records for homes sales in both Chatham County and Effingham County, spanning a period of 2 1/2 years. Using this data, I meticulously compiled and merged the information into separate CSV files for each county. By combining the data from both counties, I aimed to conduct a thorough analysis of home sale trends and market conditions in the region.
 
 Effingham County Homes Sold 2022:
@@ -19,6 +20,8 @@ Effingham County Homes Sold 2022:
 |3|R2590038|522 WINDSONG DR|1/5/2022|$0\.00|Unqualified|Y|0\.19|Residential|2010\.0|2981\.0|$0\.00|R2590: LAND: 00001/ BLDG: 000090 2 STY HOUSE|NaN|
 |4|0428C267|108 SAND PINE CT|1/27/2022|$172,500\.00|Qualified|FM|0\.29|Residential|2008\.0|1171\.0|$147\.31|0428C: LAND: 00000 / BLDG: 000110|NaN|
 
+### My Home Zestimate History
+
 Following the compilation of public records, I integrated the Zillow API to access and analyze the historical Zestimate values for my home. By leveraging the API, I obtained a detailed history of Zestimate values over time, allowing me to track fluctuations and trends in my home's estimated worth. This data provided valuable insights into the market dynamics affecting my property's value, enabling me to make informed decisions regarding its potential sale. Combining the Zestimate history with the broader home sales data from Chatham and Effingham Counties enriched my analysis, providing a comprehensive view of the real estate landscape in the area.
 
 |index|date|timestamp|value|
@@ -28,3 +31,11 @@ Following the compilation of public records, I integrated the Zillow API to acce
 |2|2014-07|2014-07-31 07:00:00|119845|
 |3|2014-08|2014-08-31 07:00:00|114984|
 |4|2014-09|2014-09-30 07:00:00|112420|
+
+### Homes for Sale in My City
+
+
+### Homes Sold in My City
+
+
+## Financial Data Collection
