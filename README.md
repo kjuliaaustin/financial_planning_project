@@ -298,6 +298,44 @@ To visualize the relationship between my home's Zestimate price and the 15-year 
 
 ### Home Sale Prices in My City
 
+To visualize the distribution of home sale prices, I used histograms and box plots. First, I checked for and addressed any missing values in the dataset. Then, I calculated the interquartile range (IQR) to identify and exclude outliers, setting the upper limit at 1.5 times the IQR above the third quartile. With the filtered data, I plotted a histogram to show the frequency distribution of home sale prices, including a kernel density estimate (KDE) for a smoother distribution curve. Additionally, I created a box plot to highlight the spread and central tendency of home sale prices, providing a clear view of the distribution and any remaining outliers. These visualizations, created using Matplotlib and Seaborn, offered valuable insights into the pricing trends of homes sold in the dataset.
+
+```python
+# Check for missing values
+print(homessold.isnull().sum())
+
+# Calculate the IQR and set the upper limit for outliers
+Q1 = homessold['price'].quantile(0.25)
+Q3 = homessold['price'].quantile(0.75)
+IQR = Q3 - Q1
+upper_limit = Q3 + 1.5 * IQR
+
+# Filter the data to exclude outliers
+filtered_data = homessold[homessold['price'] <= upper_limit]
+
+# Plotting the distribution of home sale prices using histograms
+plt.figure(figsize=(10, 6))
+sns.histplot(filtered_data['price'], kde=True, bins=30)
+plt.title('Distribution of Home Sale Prices')
+plt.xlabel('Sale Price')
+plt.ylabel('Frequency')
+plt.grid(True)
+plt.show()
+
+# Plotting the distribution of home sale prices using box plots
+plt.figure(figsize=(10, 6))
+sns.boxplot(x=filtered_data['price'])
+plt.title('Box Plot of Home Sale Prices')
+plt.xlabel('Sale Price')
+plt.grid(True)
+plt.show()
+```
+
+![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/2d7b348d-6255-4c83-8dd8-bdf1cb391dac)
+
+![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/9cd37ec7-adfa-4646-92ab-2be77a9613aa)
+
+
 ### Home Sale Prices in Chatham County (planning to sell)
 
 ### Home Sale Prices in Effingham County (planning to purchase)
