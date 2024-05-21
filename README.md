@@ -228,6 +228,8 @@ And the resulting output:
 
 ## Market Data Collection
 
+## Real Estate Analysis
+
 ### Zestimate Price on My Home
 
 To visualize the historical Zestimate values for my home, I created a line plot using Matplotlib. I plotted the Zestimate values against their corresponding dates from the myhome_history dataset. To enhance readability, I formatted the date labels to display up to 12 dates and used the %Y-%m format for year and month. Additionally, I rotated the date labels for better readability. The plot was titled "Zestimate Price on My Home Over the Last 10 Years," with labeled axes for date and Zestimate price in dollars, and included a grid for clarity.
@@ -251,3 +253,51 @@ plt.show()
 ```
 
 ![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/0e3af730-4ee8-42e6-8479-9319655847b1)
+
+### Zestimate Price on My Home vs. Interest Rates
+
+To incorporate mortgage interest rate data into my analysis, I first created a DataFrame from a dictionary of 30-year interest rates, converting it into a structured format with columns for date and interest rate. I added a new column to represent the first day of each month. By identifying the first entry of each month and adjusting the dates accordingly, I created a clean dataset with monthly interest rates. This process was repeated for both 15-year and 30-year mortgage interest rates. Finally, I merged this DataFrame with the historical Zestimate data. This merged DataFrame allowed me to analyze the relationship between mortgage interest rates and Zestimate values over time.
+
+```python
+thiryear_interest_rates_df = pd.DataFrame(list(thiryear_interest_rates.items()), columns=['date', 'interest_rate'])
+thiryear_interest_rates_df.head()
+
+# Convert date columns to datetime type
+thiryear_interest_rates_df['date'] = pd.to_datetime(thiryear_interest_rates_df['date'])
+
+# Create a new column representing the first of the month for each date
+thiryear_interest_rates_df['month_start'] = thiryear_interest_rates_df['date'].dt.to_period('M').dt.to_timestamp()
+
+# Identify the first entry of each month
+first_of_month_df2 = thiryear_interest_rates_df.drop_duplicates('month_start')
+
+# Adjust the dates of these first entries to the first of the month
+first_of_month_df2.loc[:, 'date'] = first_of_month_df2['month_start']
+first_of_month_df2 = first_of_month_df2.drop(columns='month_start')
+
+# Merge the Zestimate and interest rate DataFrames
+thir_merged_df = pd.merge(myhome_history, first_of_month_df2, on='date')
+
+# Ensure the date column is a datetime type and set as index
+thir_merged_df['date'] = pd.to_datetime(thir_merged_df['date'])
+thir_merged_df.set_index('date', inplace=True)
+```
+
+|date|timestamp|value|interest_rate|	
+|---|---|---|---|
+|2023-05-01|1685516400000|194900|5.97|
+|2023-06-01|1688108400000|196900|6.18|
+|2023-07-01|1690786800000|197100|6.24|
+|2023-08-01|1693465200000|197100|6.25|
+
+To visualize the relationship between my home's Zestimate price and the 15-year and 30-year fixed mortgage interest rates, I created a dual-axis plot using Matplotlib. The left y-axis displayed the Zestimate price in blue, while the right y-axis showed the interest rates in green, both plotted against the same date axis. This allowed for a clear comparison of trends between the two datasets over time.
+
+![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/2fed65e5-8894-4abe-89ef-8b9ac2480fee)
+
+![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/a021b591-c9ad-47b5-b018-029390664fb0)
+
+### Home Sale Prices in My City
+
+### Home Sale Prices in Chatham County (planning to sell)
+
+### Home Sale Prices in Effingham County (planning to purchase)
