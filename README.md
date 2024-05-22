@@ -338,4 +338,158 @@ plt.show()
 
 ### Home Sale Prices in Chatham County (planning to sell)
 
+To identify trends in home prices over the years, I conducted a time series analysis using home sale data from Chatham County spanning three years. I combined the datasets for 2022, 2023, and 2024 into a single DataFrame.
+
+```python
+#Use time series analysis to identify trends in home prices over the years.
+ccstotal = pd.concat([ccs22, ccs23, ccs24], ignore_index=True)
+```
+
+The 'Sale Price' column was cleaned by removing dollar signs and commas, then converted to a float data type. I set the 'Sale Date' as the index and resampled the data to calculate the monthly average sale prices. 
+
+```python
+ccstotal['Sale Date'] = pd.to_datetime(ccstotal['Sale Date'])
+ccstotal['Sale Price'] = ccstotal['Sale Price'].str.replace('$', '').str.replace(',', '').astype(float)
+ccstotal.set_index('Sale Date', inplace=True)
+monthly_ccstotal = ccstotal['Sale Price'].resample('M').mean()
+```
+
+This resulted in a new time series dataset, which I then plotted to visualize trends and seasonal patterns. The line plot, displaying monthly average home sale prices, highlighted significant price fluctuations and provided insights into market behavior over the examined period.
+
+```python
+#Plot time series graphs to visualize trens and seasonal patterns
+plt.figure(figsize=(14, 7))
+plt.plot(monthly_ccstotal, marker='o', linestyle='-')
+plt.title('Monthly Average Home Sale Prices in Chatham County')
+plt.xlabel('Date')
+plt.ylabel('Average Sale Price')
+plt.grid(True)
+plt.show()
+```
+
+![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/c4c6d156-225f-424c-9563-edb18b8312ea)
+
+I plotted the monthly average home sale prices in Chatham County over a 2.5-year period and added a 12-month rolling mean to smooth out short-term fluctuations and highlight long-term trends.
+
+![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/434f759f-9aad-4d14-9685-9daf8404ca6c)
+
+Finally, I performed a time series decomposition of the monthly average home sale prices in Chatham County, breaking it down into four components: the observed data, the trend component showing the long-term movement, the seasonal component capturing repeating patterns or cycles, and the residual component representing the random noise or irregular fluctuations.
+
+#Decompose the time series to identify trends, seasonality, and residuals
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+decomposition = seasonal_decompose(monthly_ccstotal.dropna(), model='additive')
+
+```python
+#Plot the decomposed components
+plt.figure(figsize = (14, 10))
+plt.subplot(411)
+plt.plot(decomposition.observed, label='Observed', marker='o', linestyle='-')
+plt.legend(loc='best')
+
+plt.subplot(412)
+plt.plot(decomposition.trend, label='Trend', marker='o', linestyle='-')
+plt.legend(loc='best')
+
+plt.subplot(413)
+plt.plot(decomposition.seasonal, label='Seasonality', marker='o', linestyle='-')
+plt.legend(loc='best')
+
+plt.subplot(414)
+plt.plot(decomposition.resid, label='Residuals', marker='o', linestyle='-')
+plt.legend(loc='best')
+
+plt.tight_layout()
+plt.show()
+```
+
+![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/9906ab9a-7943-4143-a488-41261510ab05)
+
 ### Home Sale Prices in Effingham County (planning to purchase)
+
+I repeated the entire process for Effingham County: concatenating the datasets, converting sale prices to numeric values, plotting average home sale prices, and performing time series decomposition to analyze the observed data, trend, seasonality, and residual components.
+
+![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/174e0c3f-1a98-4170-b715-5094cd3bdccb)
+
+![download](https://github.com/kjuliaaustin/financial_planning_project/assets/109869397/08253ca6-d064-41e1-99ad-eef957b16d4a)
+
+### Estimate Market Value
+
+After concatenating the homessold table and the homesforsale table, dropping unwanted columns, and replacing missing values, I was ready to find the estimate market value of my home.
+
+In this process, I started by encoding categorical variables, such as 'zipcode', using one-hot encoding and scaled numerical features like 'livingArea', 'bedrooms', 'bathrooms', and 'lotAreaValue' using the 'StandardScaler'. I then defined the features (X) and target variable (y), added a constant for the intercept, and split the dataset into training and testing sets. After training a linear regression model on the training data, I evaluated its performance using mean absolute error and R-squared metrics. Finally, I made a prediction for my home's market value by preparing its characteristics, ensuring consistency with the training data, scaling the features appropriately, and using the trained model to estimate its value.
+
+```python
+# Encode categorical variables if any
+# For example, using one-hot encoding for 'zipcode'
+res1 = pd.get_dummies(res1, columns=['zipcode'], drop_first=True)
+
+# Scale numerical features
+scaler = StandardScaler()
+numerical_features = ['livingArea', 'bedrooms', 'bathrooms', 'lotAreaValue']
+res1[numerical_features] = scaler.fit_transform(res1[numerical_features])
+
+# Step 2: Train a model
+
+# Define features and target variable
+X = res1.drop(columns=['price'])
+X = sm.add_constant(X)
+y = res1['price']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                    test_size = 0.2,
+                                                    random_state = 1502)
+
+#Adding a Constant term for the Intercept
+X_train = sm.add_constant(X_train)
+X_test = sm.add_constant(X_test)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Evaluate the model
+y_pred = model.predict(X_test)
+print("Mean Absolute Error:", mean_absolute_error(y_test, y_pred))
+print("R^2 Score:", r2_score(y_test, y_pred))
+
+# Step 3: Make predictions for my home
+
+# Define my home's characteristics
+my_home = {
+    'livingArea': 950,
+    'bedrooms': 2,
+    'bathrooms': 2,
+    'lotAreaValue': 7000,
+    'zipcode': 31407
+}
+
+# Convert to DataFrame
+my_home_df = pd.DataFrame([my_home])
+
+# Encode categorical variables
+my_home_df = pd.get_dummies(my_home_df, columns=['zipcode'], drop_first=True)
+
+# Ensure the DataFrame has the same columns as the training data
+for col in X.columns:
+    if col not in my_home_df.columns:
+        my_home_df[col] = 0
+
+# Reorder the columns to match the order of X_train
+my_home_df = my_home_df[X.columns]
+
+# Scale numerical features
+my_home_df[numerical_features] = scaler.transform(my_home_df[numerical_features])
+
+# Predict the market value
+predicted_value = model.predict(my_home_df)
+print("Estimated Market Value of Your Home:", predicted_value[0])
+```
+
+The estimated market value of my home seemed accurate. However the R-Squared score was extremely low.
+
+**Mean Absolute Error:** 37009.06253862419
+**R^2 Score:** -0.0704832489397278
+**Estimated Market Value of Your Home:** 196610.87966070906
+
