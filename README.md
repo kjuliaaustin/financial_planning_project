@@ -484,14 +484,14 @@ my_home_df[numerical_features] = scaler.transform(my_home_df[numerical_features]
 
 # Predict the market value
 predicted_value = model.predict(my_home_df)
-print("Estimated Market Value of Your Home:", predicted_value[0])
+print("Estimated Market Value of My Home:", predicted_value[0])
 ```
 
 The estimated market value of my home seemed accurate. However the R-Squared score was extremely low.
 
-**Mean Absolute Error:** 37009.06253862419
-**R^2 Score:** -0.0704832489397278
-**Estimated Market Value of Your Home:** 196610.87966070906
+**Mean Absolute Error:** 37009.06253862419 <br>
+**R^2 Score:** -0.0704832489397278 <br>
+**Estimated Market Value of My Home:** 196610.87966070906
 
 Initially, I encountered a low R-Squared score using linear regression to predict home prices. To improve the model's performance and achieve a higher R-Squared score, I decided to employ a Random Forest model. I implemented the following code to achieve this:
 
