@@ -493,3 +493,71 @@ The estimated market value of my home seemed accurate. However the R-Squared sco
 **R^2 Score:** -0.0704832489397278
 **Estimated Market Value of Your Home:** 196610.87966070906
 
+Initially, I encountered a low R-Squared score using linear regression to predict home prices. To improve the model's performance and achieve a higher R-Squared score, I decided to employ a Random Forest model. I implemented the following code to achieve this:
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, r2_score
+
+# Encode categorical variables
+res1 = pd.get_dummies(res1, columns=['zipcode'], drop_first=True)
+
+# Scale numerical features
+scaler = StandardScaler()
+numerical_features = ['livingArea', 'bedrooms', 'bathrooms', 'lotAreaValue']
+res1[numerical_features] = scaler.fit_transform(res1[numerical_features])
+
+# Define features and target variable
+X = res1.drop(columns=['price'])
+y = res1['price']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1502)
+
+# Train a Random Forest Regressor
+rf_model = RandomForestRegressor(n_estimators=100, random_state=1502)
+rf_model.fit(X_train, y_train)
+
+# Evaluate the model
+y_pred = rf_model.predict(X_test)
+print("Mean Absolute Error:", mean_absolute_error(y_test, y_pred))
+print("R^2 Score:", r2_score(y_test, y_pred))
+
+# Step 3: Make predictions for my home
+
+# Define my home's characteristics
+my_home = {
+    'livingArea': 950,
+    'bedrooms': 2,
+    'bathrooms': 2,
+    'lotAreaValue': 6000,
+    'zipcode': 31407
+}
+
+# Convert to DataFrame
+my_home_df = pd.DataFrame([my_home])
+
+# Encode categorical variables
+my_home_df = pd.get_dummies(my_home_df, columns=['zipcode'], drop_first=True)
+
+# Ensure the DataFrame has the same columns as the training data
+for col in X.columns:
+    if col not in my_home_df.columns:
+        my_home_df[col] = 0
+
+# Reorder the columns to match the order of X_train
+my_home_df = my_home_df[X.columns]
+
+# Scale numerical features
+my_home_df[numerical_features] = scaler.transform(my_home_df[numerical_features])
+
+# Predict the market value
+predicted_value = rf_model.predict(my_home_df)
+print("Estimated Market Value of My Home:", predicted_value[0])
+```
+
+**Mean Absolute Error:** 20366.334631185804
+**R^2 Score:** 0.7114173652933542
+**Estimated Market Value of My Home:** 246333.3
