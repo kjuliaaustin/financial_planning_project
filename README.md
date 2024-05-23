@@ -558,6 +558,6 @@ predicted_value = rf_model.predict(my_home_df)
 print("Estimated Market Value of My Home:", predicted_value[0])
 ```
 
-**Mean Absolute Error:** 20366.334631185804
-**R^2 Score:** 0.7114173652933542
+**Mean Absolute Error:** 20366.334631185804 <br>
+**R^2 Score:** 0.7114173652933542 <br>
 **Estimated Market Value of My Home:** 246333.3
