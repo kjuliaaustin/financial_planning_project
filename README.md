@@ -451,8 +451,8 @@ model.fit(X_train, y_train)
 
 # Evaluate the model
 y_pred = model.predict(X_test)
-print("Mean Absolute Error:", mean_absolute_error(y_test, y_pred))
-print("R^2 Score:", r2_score(y_test, y_pred))
+print("Mean Absolute Error:", round(mean_absolute_error(y_test, y_pred), 2))
+print("R^2 Score:", round(r2_score(y_test, y_pred), 2))
 
 # Step 3: Make predictions for my home
 
@@ -489,8 +489,8 @@ print("Estimated Market Value of My Home:", predicted_value[0])
 
 The estimated market value of my home seemed accurate. However the R-Squared score was extremely low.
 
-**Mean Absolute Error:** 37009.06253862419 <br>
-**R^2 Score:** -0.0704832489397278 <br>
+**Mean Absolute Error:** 37009.06 <br>
+**R^2 Score:** -0.07 <br>
 **Estimated Market Value of My Home:** 196610.87966070906
 
 Initially, I encountered a low R-Squared score using linear regression to predict home prices. To improve the model's performance and achieve a higher R-Squared score, I decided to employ a Random Forest model. I implemented the following code to achieve this:
@@ -522,8 +522,8 @@ rf_model.fit(X_train, y_train)
 
 # Evaluate the model
 y_pred = rf_model.predict(X_test)
-print("Mean Absolute Error:", mean_absolute_error(y_test, y_pred))
-print("R^2 Score:", r2_score(y_test, y_pred))
+print("Mean Absolute Error:", round(mean_absolute_error(y_test, y_pred), 2))
+print("R^2 Score:", round(r2_score(y_test, y_pred), 2))
 
 # Step 3: Make predictions for my home
 
@@ -558,6 +558,6 @@ predicted_value = rf_model.predict(my_home_df)
 print("Estimated Market Value of My Home:", predicted_value[0])
 ```
 
-**Mean Absolute Error:** 20366.334631185804 <br>
-**R^2 Score:** 0.7114173652933542 <br>
+**Mean Absolute Error:** 20366.33 <br>
+**R^2 Score:** 0.71 <br>
 **Estimated Market Value of My Home:** 246333.3
